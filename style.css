@@ -8,6 +8,8 @@ body {
     margin: 0;
 }
 
+/* Header */
+
 .header {
     background-color: #672280;
     display: flex;
@@ -20,3 +22,19 @@ body {
     color: white;
 }
 
+/* Form */
+
+form {
+    
+}
+
+input {
+    width: 100px;
+    margin: 40px 20px 30px 55px;
+}
+
+button {
+    display: block;
+    margin: auto;
+    width: 300px;
+}
