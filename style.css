@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+    
+}
+
+body {
+    font-family: "Karla", sans-serif;
+    margin: 0;
+}
+
+.header {
+    background-color: #672280;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-h {
+    font-size: 10px;
+    margin: 10px;
+    color: white;
+}
+
