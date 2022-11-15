@@ -374,3 +374,252 @@ function App() {
     function initialise() {
         setThingsArray(array => array)
     }
+
+
+
+
+// Arrays in state: (... is called spread syntax)
+
+function App() {
+    const [thingsArray, setThingsArray] = React.useState(["Thing 1", "Thing 2"])
+        
+    function addItem() {
+        setThingsArray(prevState => {
+            return [...prevState, `Thing ${prevState.length + 1}`]
+        })
+    }
+        
+    const thingsElements = thingsArray.map(thing => <p key={thing}>{thing}</p>)
+        
+    return (
+        <div>
+            <button onClick={addItem}>Add Item</button>
+            {thingsElements}
+        </div>
+    )
+}
+
+// Objects in state:
+
+import React from "react"
+
+export default function App() {
+    const [contact, setContact] = React.useState({
+        firstName: "John",
+        lastName: "Doe",
+        phone: "+1 (719) 555-1212",
+        email: "itsmyrealname@example.com",
+        isFavorite: false
+    })
+    /**
+     * Challenge: Use a ternary to determine which star image filename
+     * should be used based on the `contact.isFavorite` property
+     * 
+     * `true` => "star-filled.png"
+     * `false` => "star-empty.png"
+     * 
+     * Then use the starIcon value to display the correct image
+     */
+    
+    let starIcon = contact.isFavorite ? `../images/star-filled.png` : `../images/star-empty.png`
+    
+    function toggleFavorite() {
+        console.log("Toggle Favorite")
+    }
+    
+    return (
+        <main>
+            <article className="card">
+                <img src="./images/user.png" className="card--image" />
+                <div className="card--info">
+                    <img 
+                        src={starIcon} 
+                        className="card--favorite"
+                        onClick={toggleFavorite}
+                    />
+                    <h2 className="card--name">
+                        {contact.firstName} {contact.lastName}
+                    </h2>
+                    <p className="card--contact">{contact.phone}</p>
+                    <p className="card--contact">{contact.email}</p>
+                </div>
+                
+            </article>
+        </main>
+    )
+}
+
+
+// Complex state: updating state objects (detailed notes in word doc)
+
+import React from "react"
+
+export default function App() {
+    const [contact, setContact] = React.useState({
+        firstName: "John",
+        lastName: "Doe",
+        phone: "+1 (719) 555-1212",
+        email: "itsmyrealname@example.com",
+        isFavorite: false
+    })
+    
+    let starIcon = contact.isFavorite ? "star-filled.png" : "star-empty.png"
+    
+    function toggleFavorite() {
+        setContact(prevContact => {
+            return {
+                ...prevContact,
+                isFavorite: !prevContact.isFavorite
+            }
+        })
+    }
+    
+    return (
+        <main>
+            <article className="card">
+                <img src="./images/user.png" className="card--image" />
+                <div className="card--info">
+                    <img 
+                        src={`../images/${starIcon}`} 
+                        className="card--favorite"
+                        onClick={toggleFavorite}
+                    />
+                    <h2 className="card--name">
+                        {contact.firstName} {contact.lastName}
+                    </h2>
+                    <p className="card--contact">{contact.phone}</p>
+                    <p className="card--contact">{contact.email}</p>
+                </div>
+                
+            </article>
+        </main>
+    )
+}
+
+
+/**
+* Challenge: Update our state to save the meme-related
+* data as an object called `meme`. It should have the
+* following 3 properties:
+* topText, bottomText, randomImage.
+* 
+* The 2 text states can default to empty strings for now,
+* amd randomImage should default to "http://i.imgflip.com/1bij.jpg"
+* 
+* Next, create a new state variable called `allMemeImages`
+* which will default to `memesData`, which we imported above
+* 
+* Lastly, update the `getMemeImage` function and the markup 
+* to reflect our newly reformed state object and array in the
+* correct way.
+*/
+
+// My code:
+
+    const [meme, setMeme] = React.useState({
+        topText: "",
+        bottomText: "",
+        randomImage: "http://i.imgflip.com/1bij.jpg",
+    });
+    
+    function getMeme() {
+        const allMemeImages = {memesData}
+        const randomNumber = Math.floor(Math.random() * allMemeImages.length)
+        setMeme(prevState => {
+            return {
+                ...prevState,
+                randomImage: (allMemeImages[randomNumber].url)
+            }
+        })
+    }
+
+// Solution:
+
+const [meme, setMeme] = React.useState({
+    topText: "",
+    bottomText: "",
+    randomImage: "http://i.imgflip.com/1bij.jpg" 
+})
+const [allMemeImages, setAllMemeImages] = React.useState(memesData)
+
+
+function getMemeImage() {
+    const memesArray = allMemeImages.data.memes
+    const randomNumber = Math.floor(Math.random() * memesArray.length)
+    const url = memesArray[randomNumber].url
+    setMeme(prevMeme => ({
+        ...prevMeme,
+        randomImage: url
+    }))
+    
+}
+
+return (
+    <main>
+        <div className="form">
+            <input 
+                type="text"
+                placeholder="Top text"
+                className="form--input"
+            />
+            <input 
+                type="text"
+                placeholder="Bottom text"
+                className="form--input"
+            />
+            <button 
+                className="form--button"
+                onClick={getMemeImage}
+            >
+                Get a new meme image 🖼
+            </button>
+        </div>
+        <img src={meme.randomImage} className="meme--image" />
+    </main>
+)
+}
+
+// Updating state objects:
+
+import React from "react"
+
+export default function App() {
+    const [contact, setContact] = React.useState({
+        firstName: "John",
+        lastName: "Doe",
+        phone: "+1 (719) 555-1212",
+        email: "itsmyrealname@example.com",
+        isFavorite: false
+    })
+    
+    let starIcon = contact.isFavorite ? "star-filled.png" : "star-empty.png"
+// Using spread syntax essentially copies in the whole array and properties, 
+// and then if there are any property values declared differently in the function, this new value will replace the existing one. 
+    function toggleFavorite() {
+        setContact(prevContact => ({
+            ...prevContact,
+            isFavorite: !prevContact.isFavorite
+        }))
+    }
+// So, in this function, …prevContact is pulling in the entire existing state, then the isFavorite value is being updated. 
+    return (
+        <main>
+            <article className="card">
+                <img src="./images/user.png" className="card--image" />
+                <div className="card--info">
+                    <img 
+                        src={`../images/${starIcon}`} 
+                        className="card--favorite"
+                        onClick={toggleFavorite}
+                    />
+                    <h2 className="card--name">
+                        {contact.firstName} {contact.lastName}
+                    </h2>
+                    <p className="card--contact">{contact.phone}</p>
+                    <p className="card--contact">{contact.email}</p>
+                </div>
+                
+            </article>
+        </main>
+    )
+}
