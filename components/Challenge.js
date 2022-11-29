@@ -1355,3 +1355,731 @@ export default function Joke(props) {
         </div>
     )
 }
+
+// My code is right, but could've been done simpler by creating the function in Joke.js like this:
+
+
+function toggleShown(){
+    console.log(isShown)
+    setIsShown(prevShown => !prevShown)
+};
+return (
+    <div>
+        {props.setup && <h3>{props.setup}</h3>}
+        <p>{props.punchline}</p>
+        <button onClick={toggleShown}>Show Punchline</button>
+        <hr />
+    </div>
+);
+
+// && operator in React
+// In React, the && operator can be used to display something if the preceding condition is true. For example:
+
+import React from "react"
+
+export default function App() {
+    const [messages, setMessages] = React.useState(["a", "b"])
+    return (
+        <div>
+            {messages.length > 0 && <h1>You have {messages.length} unread messages!</h1>}
+        </div>
+    )
+}
+
+// In this code, when the length of the messages state array is greater than 0, the h1 will be displayed.
+
+// && conditional rendering: ternary
+
+import React from "react"
+
+export default function Joke(props) {
+    const [isShown, setIsShown] = React.useState(false)
+    function toggleShown(){
+        setIsShown(prevShown => !prevShown)
+    }
+    return (
+        <div>
+            {props.setup && <h3>{props.setup}</h3>}
+            {isShown && <p>{props.punchline}</p>}
+            <button onClick={toggleShown}>{isShown ? "Hide" : "Show"} Punchline</button>
+            <hr />
+        </div>
+    )
+}
+
+/**
+* Challenge:
+* - If there are no unread messages, display "You're all caught up!"
+* - If there are > 0 unread messages, display "You have <n> unread
+*   message(s)"
+*      - If there's exactly 1 unread message, it should read "message"
+*        (singular)
+*/
+
+// My solution (correct): 
+
+import React from "react"
+
+export default function App() {
+    const [messages, setMessages] = React.useState(["a", "b", "c"])
+
+    return (
+        <div>
+            {messages.length == 0 && <h1>You're all caught up!</h1>}
+            {messages.length > 1 && <h1>You have {messages.length} unread messages.</h1>}
+            {messages.length == 1 && <h1>You have {messages.length} unread message.</h1>}
+        </div>
+    )
+}
+
+/**
+* Challenge: update the firstName state on every keystroke
+*/
+
+import React from "react"
+
+export default function Form() {
+    const [firstName, setFirstName] = React.useState("")
+    
+    console.log(firstName)
+    
+    function handleChange(event) {
+        console.log(event.target.value)
+        
+    }
+    
+    return (
+        <form>
+            <input
+                type="text"
+                placeholder="First Name"
+                onChange={handleChange}
+            />
+        </form>
+    )
+}
+
+
+// Solution: (right first try)
+
+import React from "react"
+
+export default function Form() {
+    const [firstName, setFirstName] = React.useState("")
+    
+    console.log(firstName)
+    
+    function handleChange(event) {
+        setFirstName(event.target.value)
+    }
+    
+    return (
+        <form>
+            <input
+                type="text"
+                placeholder="First Name"
+                onChange={handleChange}
+            />
+        </form>
+    )
+}
+
+// Challenge: Track the applicants last name as well. This worked, but isn't DRY; the next videos will show how we can combine our state into
+// and object and how to use the event parameter that we're receiving in our event handlers to determine the properties of the object.
+
+import React from "react"
+
+export default function Form() {
+    const [firstName, setFirstName] = React.useState("")
+    const [lastName, setLastName] = React.useState("")
+
+    function handleChange(event) {
+        setFirstName(event.target.value)
+    }
+    
+    function handleChange2(event) {
+        setLastName(event.target.value),
+        console.log(lastName)
+    }
+    
+    return (
+        <form>
+            <input
+                type="text"
+                placeholder="First Name"
+                onChange={handleChange}
+            />
+            <input
+                type="text"
+                placeholder="Last Name"
+                onChange={handleChange2}
+            />
+        </form>
+    )
+}
+
+// Creating an object from state:
+
+import React from "react"
+
+export default function Form() {
+    const [formData, setFormData] = React.useState(
+        {firstName: "", lastName: ""}
+    )
+
+    console.log(formData)
+    
+// Now, in the function, we can return the object but replace the required value with the event target 'name', which is a property of each form
+// input that corresponds to one of the values of the state object. The square brackets prevent a syntax error around the target.name selection.
+
+    function handleChange(event) {
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                [event.target.name]: event.target.value
+            }
+        })
+    }
+    
+    return (
+        <form>
+            <input
+                type="text"
+                placeholder="First Name"
+                onChange={handleChange}
+                name="firstName"
+            />
+            <input
+                type="text"
+                placeholder="Last Name"
+                onChange={handleChange}
+                name="lastName"
+            />
+        </form>
+    )
+}
+
+// Challenge: Add an email field and state to the form (Right first time):
+
+import React from "react"
+
+export default function Form() {
+    const [formData, setFormData] = React.useState(
+        {firstName: "", lastName: "", email: ""}
+    )
+    
+    console.log(formData)
+    
+    function handleChange(event) {
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                [event.target.name]: event.target.value
+            }
+        })
+    }
+    
+    return (
+        <form>
+            <input
+                type="text"
+                placeholder="First Name"
+                onChange={handleChange}
+                name="firstName"
+            />
+            <input
+                type="text"
+                placeholder="Last Name"
+                onChange={handleChange}
+                name="lastName"
+            />
+            <input
+                type="email"
+                placeholder="Your Email"
+                onChange={handleChange}
+                name="email"
+            />
+        </form>
+    )
+}
+
+
+// Controlled inputs: in React form, there are two states, the state held by the input field and the state object. 
+// We can make the React state be the 'single source of truth', by giving each input a value of the state and 
+// name of the value with dot notation, like this: 
+
+return (
+    <form>
+        <input
+            type="text"
+            placeholder="First Name"
+            onChange={handleChange}
+            name="firstName"
+            value={formData.firstName}
+        />
+        <input
+            type="text"
+            placeholder="Last Name"
+            onChange={handleChange}
+            name="lastName"
+            value={formData.lastName}
+        />
+        <input
+            type="email"
+            placeholder="Email"
+            onChange={handleChange}
+            name="email"
+            value={formData.email}
+        />
+    </form>
+)
+
+// Adding a textbox field to the form and state:
+
+import React from "react"
+
+export default function Form() {
+    const [formData, setFormData] = React.useState(
+        {firstName: "", lastName: "", email: "", comments: ""}
+    )
+    
+    console.log(formData.comments)
+    
+    function handleChange(event) {
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                [event.target.name]: event.target.value
+            }
+        })
+    }
+    
+    return (
+        <form>
+            <input
+                type="text"
+                placeholder="First Name"
+                onChange={handleChange}
+                name="firstName"
+                value={formData.firstName}
+            />
+            <input
+                type="text"
+                placeholder="Last Name"
+                onChange={handleChange}
+                name="lastName"
+                value={formData.lastName}
+            />
+            <input
+                type="email"
+                placeholder="Email"
+                onChange={handleChange}
+                name="email"
+                value={formData.email}
+            />
+            <textarea 
+                value={formData.comments}
+                placeholder="Comments"
+                onChange={handleChange}
+                name="comments"
+            />
+        </form>
+    )
+}
+
+
+// Adding checkbox elements: also shown at this step the best practice for the event function for a form, which is to destructure the 
+// array and make each destructured value equal to the event.target, then use a ternary to check for the checked status of the checkbox.
+
+import React from "react"
+
+export default function Form() {
+    const [formData, setFormData] = React.useState(
+        {
+            firstName: "", 
+            lastName: "", 
+            email: "", 
+            comments: "", 
+            isFriendly: true
+        }
+    )
+    
+    function handleChange(event) {
+        const {name, value, type, checked} = event.target
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                [name]: type === "checkbox" ? checked : value
+            }
+        })
+    }
+    
+    return (
+        <form>
+            <input
+                type="text"
+                placeholder="First Name"
+                onChange={handleChange}
+                name="firstName"
+                value={formData.firstName}
+            />
+            <input
+                type="text"
+                placeholder="Last Name"
+                onChange={handleChange}
+                name="lastName"
+                value={formData.lastName}
+            />
+            <input
+                type="email"
+                placeholder="Email"
+                onChange={handleChange}
+                name="email"
+                value={formData.email}
+            />
+            <textarea 
+                value={formData.comments}
+                placeholder="Comments"
+                onChange={handleChange}
+                name="comments"
+            />
+            <input 
+                type="checkbox" 
+                id="isFriendly" 
+                checked={formData.isFriendly}
+                onChange={handleChange}
+                name="isFriendly"
+            />
+            <label htmlFor="isFriendly">Are you friendly?</label>
+            <br />
+        </form>
+    )
+}
+
+
+// Adding radio buttons and a dropdown:
+
+import React from "react"
+
+export default function Form() {
+    const [formData, setFormData] = React.useState(
+        {
+            firstName: "", 
+            lastName: "", 
+            email: "", 
+            comments: "", 
+            isFriendly: true,
+            employment: "",
+            favColor: ""
+        }
+    )
+    console.log(formData.favColor)
+    
+    function handleChange(event) {
+        console.log(event)
+        const {name, value, type, checked} = event.target
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                [name]: type === "checkbox" ? checked : value
+            }
+        })
+    }
+    
+    return (
+        <form>
+            <input
+                type="text"
+                placeholder="First Name"
+                onChange={handleChange}
+                name="firstName"
+                value={formData.firstName}
+            />
+            <input
+                type="text"
+                placeholder="Last Name"
+                onChange={handleChange}
+                name="lastName"
+                value={formData.lastName}
+            />
+            <input
+                type="email"
+                placeholder="Email"
+                onChange={handleChange}
+                name="email"
+                value={formData.email}
+            />
+            <textarea 
+                value={formData.comments}
+                placeholder="Comments"
+                onChange={handleChange}
+                name="comments"
+            />
+            <input 
+                type="checkbox" 
+                id="isFriendly" 
+                checked={formData.isFriendly}
+                onChange={handleChange}
+                name="isFriendly"
+            />
+            <label htmlFor="isFriendly">Are you friendly?</label>
+            <br />
+            <br />
+            
+            <fieldset>
+                <legend>Current employment status</legend>
+                <input 
+                    type="radio"
+                    id="unemployed"
+                    name="employment"
+                    value="unemployed"
+                    checked={formData.employment === "unemployed"}
+                    onChange={handleChange}
+                />
+                <label htmlFor="unemployed">Unemployed</label>
+                <br />
+                
+                <input 
+                    type="radio"
+                    id="part-time"
+                    name="employment"
+                    value="part-time"
+                    checked={formData.employment === "part-time"}
+                    onChange={handleChange}
+                />
+                <label htmlFor="part-time">Part-time</label>
+                <br />
+                
+                <input 
+                    type="radio"
+                    id="full-time"
+                    name="employment"
+                    value="full-time"
+                    checked={formData.employment === "full-time"}
+                    onChange={handleChange}
+                />
+                <label htmlFor="full-time">Full-time</label>
+                <br />
+            </fieldset>
+            <br />
+            
+            <label htmlFor="favColor">What is your favorite color?</label>
+            <br />
+            <select 
+                id="favColor"
+                value={formData.favColor}
+                onChange={handleChange}
+                name="favColor"
+            >
+                <option value="">-- Choose --</option>
+                <option value="red">Red</option>
+                <option value="orange">Orange</option>
+                <option value="yellow">Yellow</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+                <option value="indigo">Indigo</option>
+                <option value="violet">Violet</option>
+            </select>
+        </form>
+    )
+}
+
+
+// Forms quiz
+
+1. In a vanilla JS app, at what point in the form submission
+   process do you gather all the data from the filled-out form?
+   Submit
+
+
+2. In a React app, when do you gather all the data from
+   the filled-out form?
+Submit
+
+
+3. Which attribute in the form elements (value, name, onChange, etc.)
+   should match the property name being held in state for that input?
+   name
+
+
+4. What's different about a saving the data from a checkbox element
+   vs. other form elements?
+You need to determine which one is currently === to true so that only one checkbox can be checked at a time.
+
+
+5. How do you watch for a form submit? How can you trigger
+   a form submit?
+   onSubmit
+
+// Answers:
+
+
+/**
+    * Challenge: Connect the form to local state
+    * 
+    * 1. Create a state object to store the 4 values we need to save.
+    * 2. Create a single handleChange function that can
+    *    manage the state of all the inputs and set it up
+    *    correctly
+    * 3. When the user clicks "Sign up", check if the 
+    *    password & confirmation match each other. If
+    *    so, log "Successfully signed up" to the console.
+    *    If not, log "passwords to not match" to the console.
+    * 4. Also when submitting the form, if the person checked
+    *    the "newsletter" checkbox, log "Thanks for signing
+    *    up for our newsletter!" to the console.
+    */
+
+
+import React from "react"
+
+export default function App() {
+
+    
+    function handleSubmit(event) {
+        event.preventDefault()
+    }
+    
+    return (
+        <div className="form-container">
+            <form className="form" onSubmit={handleSubmit}>
+                <input 
+                    type="email" 
+                    placeholder="Email address"
+                    className="form--input"
+                />
+                <input 
+                    type="password" 
+                    placeholder="Password"
+                    className="form--input"
+                />
+                <input 
+                    type="password" 
+                    placeholder="Confirm password"
+                    className="form--input"
+                />
+                
+                <div className="form--marketing">
+                    <input
+                        id="okayToEmail"
+                        type="checkbox"
+                        
+                    />
+                    <label htmlFor="okayToEmail">I want to join the newsletter</label>
+                </div>
+                <button 
+                    className="form--submit"
+                >
+                    Sign up
+                </button>
+            </form>
+        </div>
+    )
+}
+
+
+// My solution:
+
+import React from "react"
+
+export default function App() {
+    
+    const [formData, setFormData] = React.useState(
+        {
+            email: "",
+            password: "",
+            confirmPassword: "",
+            newsletterJoin: false
+        }
+    )
+    
+ function handleChange(event) {
+        const {name, value, type, checked} = event.target
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                [name]: type === "checkbox" ? checked : value
+            }
+        })
+    }
+    
+    
+    function signUp() {
+        if (formData.password == formData.confirmPassword && formData.newsletterJoin == true) {
+            console.log('Successfully signed up. Thanks for signing up to our newsletter!')
+        } else if (formData.password == formData.confirmPassword) {
+            console.log('Successfully signed up.')
+        } else {
+            console.log('Passwords do not match')
+        }
+    }
+
+    
+    function handleSubmit(event) {
+        event.preventDefault()
+    }
+    
+    return (
+        <div className="form-container">
+            <form className="form" onSubmit={handleSubmit}>
+                <input 
+                    type="email" 
+                    placeholder="Email address"
+                    className="form--input"
+                    name="email"
+                    onChange={handleChange}
+                />
+                <input 
+                    type="password" 
+                    placeholder="Password"
+                    className="form--input"
+                    name="password"
+                    onChange={handleChange}
+                />
+                <input 
+                    type="password" 
+                    placeholder="Confirm password"
+                    className="form--input"
+                    name="confirmPassword"
+                    onChange={handleChange}
+                />
+                
+                <div className="form--marketing">
+                    <input
+                        id="okayToEmail"
+                        type="checkbox"
+                        name="newsletterJoin"
+                        onChange={handleChange}
+                        checked={formData.newsletterJoin}
+                    />
+                    <label htmlFor="okayToEmail">I want to join the newsletter</label>
+                </div>
+                <button 
+                    className="form--submit"
+                    onClick={signUp}
+                >
+                    Sign up
+                </button>
+            </form>
+        </div>
+    )
+}
+
+
+// My code was right, it worked, but this was the course solution:
+// The checkbox if was in it's own if statement, and the non-matching had a return so someone with passwords that didn't match wouldn't see the newsletter copy. Also, I didn't need to create
+// a seperate function called signUp, since any button in a form element acts as a submit by default, and the form had onSubmit={handleSubmit}> in the code.
+
+function handleSubmit(event) {
+    event.preventDefault()
+    if(formData.password === formData.passwordConfirm) {
+        console.log("Successfully signed up")
+    } else {
+        console.log("Passwords do not match")
+        return
+    }
+    
+    if(formData.joinedNewsletter) {
+        console.log("Thanks for signing up for our newsletter!")
+    }
+}
