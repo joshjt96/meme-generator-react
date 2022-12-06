@@ -2083,3 +2083,125 @@ function handleSubmit(event) {
         console.log("Thanks for signing up for our newsletter!")
     }
 }
+
+// Also, return isn't needed in spread syntax part of a handleChange function. Wrapping text in brackets works, like this: 
+
+function handleChange(event) {
+    const {name, value, type, checked} = event.target
+    setFormData(prevFormData => ({
+        ...prevFormData,
+        [name]: type === "checkbox" ? checked
+    }))
+}
+
+import React from "react"
+import memesData from "../memesData.js"
+
+export default function Meme() {
+    /**
+     * Challenge: 
+     * 1. Set up the text inputs to save to
+     *    the `topText` and `bottomText` state variables.
+     * 2. Replace the hard-coded text on the image with
+     *    the text being saved to state.
+     */
+    
+    const [meme, setMeme] = React.useState({
+        topText: "",
+        bottomText: "",
+        randomImage: "http://i.imgflip.com/1bij.jpg" 
+    })
+    
+    function handleChange() {
+        const [name, value, type] = event.target
+        setMeme(prevMemeData => ({
+            ...prevMemeData,
+        }))
+    }
+    
+    const [allMemeImages, setAllMemeImages] = React.useState(memesData)
+    
+    function getMemeImage() {
+        const memesArray = allMemeImages.data.memes
+        const randomNumber = Math.floor(Math.random() * memesArray.length)
+        const url = memesArray[randomNumber].url
+        setMeme(prevMeme => ({
+            ...prevMeme,
+            randomImage: url
+        }))
+        
+    }
+    
+    return (
+        <main>
+            <div className="form">
+                <input 
+                    type="text"
+                    placeholder="Top text"
+                    className="form--input"
+                    name="topText"
+                    onChange={handleChange}
+                />
+                <input 
+                    type="text"
+                    placeholder="Bottom text"
+                    className="form--input"
+                    name="bottomText"
+                    onChange={handleChange}
+                />
+                <button 
+                    className="form--button"
+                    onClick={getMemeImage}
+                >
+                    Get a new meme image 🖼
+                </button>
+            </div>
+            <div className="meme">
+                <img src={meme.randomImage} className="meme--image" />
+                <h2 className="meme--text top">{meme.topText}</h2>
+                <h2 className="meme--text bottom">{meme.bottomText}</h2>
+            </div>
+        </main>
+    )
+}
+
+// I was stuck on what to do in the setMeme function of the handleChange function. All i needed to do was add a 'value' property to the form inputs, and this to the function:
+function handleChange() {
+    const [name, value] = event.target
+    setMeme(prevMemeData => ({
+        ...prevMemeData,
+        [name]: value
+    }))
+}
+
+// [name]: value is saying to change the value of whatever 'name' has been changed (topText or bottomText) to the value of the input by the user. It knows which name has been changed
+// via the event.target method, and the value is set in the form input with value={meme.topText}
+
+import React from "react"
+
+export default function App() {
+    const [starWarsData, setStarWarsData] = React.useState({})
+    const [count, setCount] = React.useState(0)
+    
+    console.log("Component rendered")
+    
+    /**
+     * Challenge: re-write the useEffect
+     * It should run any time `count` changes
+     * For now, just console.log("Effect function ran")
+     */
+    
+    React.useEffect(function() {
+        console.log('Effect function ran')
+    }, [count])
+    
+    return (
+        <div>
+            <pre>{JSON.stringify(starWarsData, null, 2)}</pre>
+            <h2>The count is {count}</h2>
+            <button onClick={() => setCount(prevCount => prevCount + 1)}>Add</button>
+        </div>
+    )
+}
+
+
