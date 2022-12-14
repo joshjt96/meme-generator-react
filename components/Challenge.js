@@ -2204,4 +2204,63 @@ export default function App() {
     )
 }
 
+import React from "react"
+import WindowTracker from "./WindowTracker"
+
+export default function App() {
+    /**
+     * Challenge:
+     * 1. Create state called `show`, default to `true`
+     * 2. When the button is clicked, toggle `show`
+     * 3. Only display `<WindowTracker>` if `show` is `true`
+     */
+    
+    const [show, setShow] = React.useState(true)
+    
+    function toggleShow() {
+        setShow((prevState) => !prevState)
+        console.log(show)
+        if (setShow == false) {
+            h1.style={display: none}
+        }
+    }
+    
+    return (
+        <div className="container">
+            <button onClick={toggleShow}>
+                Toggle WindowTracker
+            </button>
+            <WindowTracker />
+        </div>
+    )
+}
+
+
+// Display the window width every time it changes challenge, right first time:
+
+import React from "react"
+
+export default function WindowTracker() {
+    /**
+     * Challenge:
+     * 1. Create state called `windowWidth`, default to 
+     *    `window.innerWidth`
+     * 2. When the window width changes, update the state
+     * 3. Display the window width in the h1 so it updates
+     *    every time it changes
+     */
+    
+    const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
+    
+    React.useEffect(() => {
+        window.addEventListener("resize", function() {
+            console.log("Resized")
+            setWindowWidth((prevWindowWidth) => window.innerWidth)
+        })
+    }, [])
+    
+    return (
+        <h1>Window width: {window.innerWidth}</h1>
+    )
+}
 
