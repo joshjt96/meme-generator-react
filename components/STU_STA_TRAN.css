@@ -1,0 +1,48 @@
+/* Heading Text */
+
+<style type="text/css">
+
+.sv-radio{margin-top:0;}
+.inline .sv-radio {
+display: inline-block !important;
+padding-left: 15px;
+}
+.left{clear:both;float:left;width:40%;text-align:right;font-weight:bold;margin-bottom:10px;}
+.left p{font-weight:normal;}
+.right{display:inline;float:left;width:60%;padding-left:10px;margin-bottom:10px;}
+.full{clear:both;width:100%;text-align:center;}
+.section-divider{width:100%;clear:both;}
+</style>
+
+<<@STU_TASK_HEADER_TTE>>
+<<@STU_TASK_HEADER_SPR>>
+
+{{SEL:"<<MHD_CATE.MHD>>"="STTRN":<p style="font-size:24pt;text-align:center;color:red;">Status: Archived</p><hr aria-hidden="true"/>}}
+
+<div style="clear:both;">
+	<strong>Current Course Information</strong>
+</div>
+<div class="full">
+	<<@STU_STU_CHANGE_SPR_INFO>>
+</div>
+
+<div style="clear:both;">
+	<strong>Current Modules Information</strong>
+</div>
+<div>
+
+<table style="border-collapse: collapse; width:100%;" class="display">
+<thead>
+<tr class="header">
+<th width="30%" style="text-align: left;">Module Code</th>
+<th width="20%" style="text-align: left;">Name</th>
+<th width="20%" style="text-align: left;">Year</th>
+<th width="20%" style="text-align: left;">Period</th>
+<th width="10%" style="text-align: left;">Occurance</th>
+<th width="10%" style="text-align: left;">Credit</th>
+<<"P01=STU_CHG_MODI"&PSRS_YRQH.GET·;P02>>
+</thead>
+</table><hr aria-hidden="true"/>
+
+<br />
+</div>
